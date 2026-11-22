@@ -102,19 +102,19 @@ details[open]>summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <div id="root"><div id="boot"><strong style="font-size:20px;color:var(--ink)">Memuat simulasi TOEFL iBT…</strong><span>Menyiapkan bank soal dan tampilan ujian.</span></div></div>
-<script src="js/data-reading.js"></script>
-<script src="js/data-listening.js"></script>
-<script src="js/data-speaking-writing.js"></script>
+<script src="data-reading.js"></script>
+<script src="data-listening.js"></script>
+<script src="data-speaking-writing.js"></script>
 <script>
   setTimeout(function () {
     if (window.__appMounted) return;
     var b = document.getElementById("boot");
     if (!b) return;
-    if (location.protocol === "file:") b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Buka lewat server, bukan klik dua kali</strong><span>File js/app.jsx tidak bisa dimuat dari folder lokal. Buka melalui GitHub Pages (atau server lokal seperti VS Code Live Server).</span>';
-    else if (!window.TOEFL_BANK || !window.TOEFL_BANK.reading) b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Bank soal tidak ditemukan</strong><span>Pastikan folder js/ ikut terunggah bersama index.html.</span>';
-    else b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Aplikasi belum termuat</strong><span>Pastikan koneksi internet aktif (React, Tailwind, Babel, dan Lucide dimuat dari CDN) dan js/app.jsx ikut terunggah, lalu muat ulang halaman.</span>';
+    if (location.protocol === "file:") b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Buka lewat server, bukan klik dua kali</strong><span>File app.jsx tidak bisa dimuat dari folder lokal. Buka melalui GitHub Pages (atau server lokal seperti VS Code Live Server).</span>';
+    else if (!window.TOEFL_BANK || !window.TOEFL_BANK.reading) b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Bank soal tidak ditemukan</strong><span>Pastikan data-reading.js, data-listening.js, dan data-speaking-writing.js ada di folder yang sama dengan index.html.</span>';
+    else b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Aplikasi belum termuat</strong><span>Pastikan koneksi internet aktif (React, Tailwind, Babel, dan Lucide dimuat dari CDN) dan app.jsx ada di folder yang sama dengan index.html, lalu muat ulang halaman.</span>';
   }, 15000);
 </script>
-<script type="text/babel" data-presets="react" src="js/app.jsx"></script>
+<script type="text/babel" data-presets="react" src="app.jsx"></script>
 </body>
 </html>
