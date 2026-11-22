@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulasi TOEFL iBT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<script>
+  (function () {
+    var t = null;
+    try { t = JSON.parse(localStorage.getItem("toefl-ibt-theme")); } catch (e) {}
+    if (t !== "dark" && t !== "light") {
+      var a = document.documentElement.getAttribute("data-theme");
+      t = a === "dark" || a === "light" ? a : (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    }
+    if (t === "dark") document.documentElement.classList.add("dark");
+  })();
+</script>
+<style>
+/* VOICE  everyday study tool: calm, exam-serious, encouraging
+   IDEA   the American college "blue book" exam booklet: cloth-blue cover, white name label, ruled answer pages
+   PICTURE the blue cover band whose label card carries the latest score; inside an exam the working test screen itself
+   COLOUR blue-book blue cover, white paper, near-black ink, margin red for recording, highlighter yellow, green/red for right/wrong
+   TYPE   Archivo 800 display + Archivo text; Source Serif 4 for passages, samples and essays
+   LAYOUT laptop: title left, label card right, split-screen exams; 720px: stacked cover, two-column cards; phone: title, card, buttons, tabbed reading */
+:root{
+  color-scheme: light;
+  --paper:#ffffff; --surface:#f2f5fc; --ink:#141821; --muted:#566074; --line:#dbe2f0; --rule:#e2e9fa;
+  --book:#2d5bd7; --booksoft:#e7eefe; --cover:#2d5bd7; --cover2:#244cc0; --mark:#d93246;
+  --ok:#157a44; --oksoft:#e2f5e9; --bad:#cf2e3d; --badsoft:#fde9eb; --warn:#a86f00; --warnsoft:#fff3d4; --hl:#ffe680;
+}
+html.dark{
+  color-scheme: dark;
+  --paper:#0d121c; --surface:#151c2a; --ink:#e8ecf4; --muted:#9ba5ba; --line:#263045; --rule:#1c2537;
+  --book:#7d9cf7; --booksoft:#1a2645; --cover:#1d3a8f; --cover2:#17307a; --mark:#ff6b7c;
+  --ok:#43cf86; --oksoft:#10301e; --bad:#ff707c; --badsoft:#3a1820; --warn:#f2b632; --warnsoft:#33280c; --hl:#6b5a12;
+}
+@layer base{
+  *{box-sizing:border-box;min-width:0}
+  html,body,#root{height:100%;margin:0}
+  body{background:var(--paper);color:var(--ink);font:16px/1.55 "Archivo",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip;-webkit-font-smoothing:antialiased}
+  button{cursor:pointer}
+}
+.cover{background:
+  repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 2px,transparent 2px 6px),
+  repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 6px),
+  linear-gradient(160deg,var(--cover),var(--cover2));
+  box-shadow:inset 18px 0 0 rgba(0,0,0,.14),inset 20px 0 0 rgba(255,255,255,.08)}
+.label-card{position:relative;background:var(--paper);border-radius:16px;padding:22px 24px;box-shadow:0 22px 44px -22px rgba(5,12,40,.55)}
+.label-card::before{content:"";position:absolute;inset:7px;border:1.5px solid color-mix(in srgb,var(--ink) 16%,transparent);border-radius:11px;pointer-events:none}
+.ruled{line-height:28px;padding-top:14px;padding-bottom:14px;padding-left:30px!important;
+  background-image:linear-gradient(to right,transparent 18px,color-mix(in srgb,var(--mark) 45%,transparent) 18px,color-mix(in srgb,var(--mark) 45%,transparent) 19.5px,transparent 19.5px),
+    linear-gradient(to bottom,transparent 27px,var(--rule) 27px,var(--rule) 28px);
+  background-size:100% 100%,100% 28px;background-repeat:no-repeat,repeat;background-position:0 0,0 14px;background-attachment:local,local}
+.passage mark.hl,mark.hl{background:var(--hl);color:inherit;border-radius:3px;padding:1px 0}
+.voc{text-decoration:underline dotted;text-decoration-color:var(--book);text-decoration-thickness:2px;text-underline-offset:4px;cursor:help}
+.tgt{background:color-mix(in srgb,var(--ink) 13%,transparent);font-weight:700;border-radius:4px;padding:0 3px}
+.wave span{display:block;width:4px;border-radius:3px;background:var(--book);opacity:.3;transform:scaleY(.22);transition:transform .3s,opacity .3s}
+.wave.is-on span{opacity:.9;animation:wv .85s ease-in-out infinite alternate}
+@keyframes wv{from{transform:scaleY(.18)}to{transform:scaleY(1)}}
+.pulse-soft{animation:ps 1.2s ease-in-out infinite}
+@keyframes ps{50%{opacity:.55}}
+.fade-in{animation:fi .22s ease-out}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.bar-grow{transition:width .6s cubic-bezier(.2,.7,.2,1)}
+details>summary{list-style:none}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"▸";display:inline-block;margin-right:8px;color:var(--book);transition:transform .2s}
+details[open]>summary::before{transform:rotate(90deg)}
+#boot{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);text-align:center;padding:24px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{
+  @page{margin:14mm}
+  html,body,#root,.h-full,.print-flow{height:auto!important;overflow:visible!important}
+  :root,html.dark{--paper:#fff;--surface:#f4f6fb;--ink:#111;--muted:#555;--line:#d0d6e2;--book:#1f4fc4;--booksoft:#e9effd;--ok:#14713f;--oksoft:#e6f4eb;--bad:#b4232f;--badsoft:#fbe9eb;--warn:#8a5c00;--warnsoft:#fff4d9;color-scheme:light}
+  .no-print{display:none!important}
+  .cover{background:#fff!important;box-shadow:none!important;border-bottom:2px solid #111}
+  .print-plain,.print-plain *{color:#111!important}
+  .label-card{box-shadow:none;border:1px solid #ccc}
+  .avoid-break{break-inside:avoid}
+}
+</style>
+<style type="text/tailwindcss">
+@custom-variant dark (&:where(.dark, .dark *));
+@theme inline {
+  --color-paper: var(--paper); --color-surface: var(--surface); --color-ink: var(--ink); --color-muted: var(--muted);
+  --color-line: var(--line); --color-book: var(--book); --color-booksoft: var(--booksoft); --color-mark: var(--mark);
+  --color-ok: var(--ok); --color-oksoft: var(--oksoft); --color-bad: var(--bad); --color-badsoft: var(--badsoft);
+  --color-warn: var(--warn); --color-warnsoft: var(--warnsoft); --color-hl: var(--hl);
+  --font-display: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11/dist/index.global.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div id="root"><div id="boot"><strong style="font-size:20px;color:var(--ink)">Memuat simulasi TOEFL iBT…</strong><span>Menyiapkan bank soal dan tampilan ujian.</span></div></div>
+<script src="js/data-reading.js"></script>
+<script src="js/data-listening.js"></script>
+<script src="js/data-speaking-writing.js"></script>
+<script>
+  setTimeout(function () {
+    if (window.__appMounted) return;
+    var b = document.getElementById("boot");
+    if (!b) return;
+    if (location.protocol === "file:") b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Buka lewat server, bukan klik dua kali</strong><span>File js/app.jsx tidak bisa dimuat dari folder lokal. Buka melalui GitHub Pages (atau server lokal seperti VS Code Live Server).</span>';
+    else if (!window.TOEFL_BANK || !window.TOEFL_BANK.reading) b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Bank soal tidak ditemukan</strong><span>Pastikan folder js/ ikut terunggah bersama index.html.</span>';
+    else b.innerHTML = '<strong style="font-size:20px;color:var(--ink)">Aplikasi belum termuat</strong><span>Pastikan koneksi internet aktif (React, Tailwind, Babel, dan Lucide dimuat dari CDN) dan js/app.jsx ikut terunggah, lalu muat ulang halaman.</span>';
+  }, 15000);
+</script>
+<script type="text/babel" data-presets="react" src="js/app.jsx"></script>
+</body>
+</html>
