@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "Simulasi TOEFL iBT",
+  "short_name": "TOEFL iBT",
+  "description": "Simulasi dan latihan TOEFL iBT empat section (Reading, Listening, Speaking, Writing) dengan skor 0–120 dan pembahasan Bahasa Indonesia.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#2d5bd7",
+  "theme_color": "#2d5bd7",
+  "categories": ["education"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

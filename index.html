@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Simulasi TOEFL iBT</title>
+<meta name="description" content="Simulasi dan latihan TOEFL iBT empat section dengan skor 0–120 dan pembahasan Bahasa Indonesia.">
+<meta name="theme-color" content="#2d5bd7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1d3a8f" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TOEFL iBT">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
@@ -69,6 +79,14 @@ details>summary{list-style:none}
 details>summary::-webkit-details-marker{display:none}
 details>summary::before{content:"▸";display:inline-block;margin-right:8px;color:var(--book);transition:transform .2s}
 details[open]>summary::before{transform:rotate(90deg)}
+.ib{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:80;width:min(94vw,460px);display:flex;align-items:center;gap:12px;padding:10px 8px 10px 12px;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 40px -16px rgba(5,12,40,.55);font-family:"Archivo",ui-sans-serif,system-ui,sans-serif}
+.ib[hidden]{display:none}
+.ib img{border-radius:10px;flex:none}
+.ib-t{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3}
+.ib-t strong{font-size:15px}
+.ib-t span{font-size:13px;color:var(--muted)}
+#install-yes{flex:none;height:44px;padding:0 16px;border:0;border-radius:12px;background:var(--cover);color:#fff;font:700 15px "Archivo",system-ui,sans-serif;cursor:pointer}
+#install-no{flex:none;width:40px;height:44px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:24px;line-height:1;cursor:pointer}
 #boot{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--muted);text-align:center;padding:24px}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 @media print{
@@ -80,6 +98,7 @@ details[open]>summary::before{transform:rotate(90deg)}
   .print-plain,.print-plain *{color:#111!important}
   .label-card{box-shadow:none;border:1px solid #ccc}
   .avoid-break{break-inside:avoid}
+  .ib{display:none!important}
 }
 </style>
 <style type="text/tailwindcss">
@@ -102,6 +121,41 @@ details[open]>summary::before{transform:rotate(90deg)}
 </head>
 <body>
 <div id="root"><div id="boot"><strong style="font-size:20px;color:var(--ink)">Memuat simulasi TOEFL iBT…</strong><span>Menyiapkan bank soal dan tampilan ujian.</span></div></div>
+<div id="install" class="ib" hidden role="dialog" aria-label="Pasang aplikasi">
+  <img src="icon-192.png" alt="" width="44" height="44">
+  <div class="ib-t"><strong>Pasang aplikasi</strong><span>Buka dari layar utama, tetap bisa dipakai offline.</span></div>
+  <button type="button" id="install-yes">Pasang</button>
+  <button type="button" id="install-no" aria-label="Nanti saja">×</button>
+</div>
+<script>
+  (function () {
+    var inFrame = true;
+    try { inFrame = window.self !== window.top; } catch (e) {}
+    if (!inFrame && "serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+      window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
+    }
+    var KEY = "toefl-ibt-install-later", deferred = null, box = document.getElementById("install");
+    function standalone() { return (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone === true; }
+    function snoozed() { try { var t = +localStorage.getItem(KEY); return t && Date.now() - t < 14 * 864e5; } catch (e) { return false; } }
+    function hide() { box.hidden = true; }
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferred = e;
+      if (!standalone() && !snoozed()) box.hidden = false;
+    });
+    document.getElementById("install-yes").addEventListener("click", function () {
+      if (!deferred) { hide(); return; }
+      deferred.prompt();
+      deferred.userChoice.finally(function () { deferred = null; hide(); });
+    });
+    document.getElementById("install-no").addEventListener("click", function () {
+      try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {}
+      hide();
+    });
+    document.addEventListener("click", function (e) { if (!box.hidden && !box.contains(e.target)) hide(); }, true);
+    window.addEventListener("appinstalled", hide);
+  })();
+</script>
 <script src="data-reading.js"></script>
 <script src="data-listening.js"></script>
 <script src="data-speaking-writing.js"></script>
